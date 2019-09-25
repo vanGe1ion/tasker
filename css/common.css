@@ -1,0 +1,76 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    background-color: darkgray;
+}
+
+div.Main{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    overflow: auto;
+}
+
+div.Sub{
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    align-self: center;
+}
+
+
+
+
+
+div.footSub{
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+}
+
+button.subMenu{
+    font-size: larger;
+    height: 40px;
+    width: 300px;
+    margin-right: 5px;
+}
+
+
+
+
+
+table{
+    border: 3px solid black;
+    width: 100%;
+}
+
+td, th{
+    border: 1px solid black;
+    padding: 5px;
+    font-size: larger;
+}
+
+button.table {
+    font-size: medium;
+    width: 140px;
+    padding: 3px;
+}
+
+.options{
+    width: 285px;
+}
+
+input{
+    width: calc(100% - 4px);
+}
+
+select{
+    width: 100%;
+    height: 23px;
+}
+
+.result{
+    min-width: 200px;
+    max-width: 400px;
+}

@@ -1,0 +1,12 @@
+{
+  "db_config": {
+    "host": "10.1.92.80",
+    "login": "root",
+    "password": "",
+    "db": "tasker"
+  },
+
+  "default": {
+    "tasks": "all"
+  }
+}
