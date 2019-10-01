@@ -1,6 +1,6 @@
 {
   "db_config": {
-    "host": "10.1.92.80",
+    "host": "localhost",
     "login": "root",
     "password": "",
     "db": "tasker"

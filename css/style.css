@@ -1,0 +1,21 @@
+.add, .edit, .delete, .save, .cancel{
+    width: 120px;
+}
+
+.options{
+    width: 270px;
+}
+
+.empButton{
+    width: 150px;
+}
+
+.empOperation{
+    width: 28px;
+}
+
+.result{
+    min-width: 200px;
+    max-width: 400px;
+    word-break: break-all;
+}
