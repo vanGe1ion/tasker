@@ -2,7 +2,9 @@
 $f_config = "config.json";
 $configs = json_decode(file_get_contents($f_config));
 $db_con = $configs->db_config;
+$domain = $configs->domain_name;
 $db_connection = mysqli_connect($db_con->host, $db_con->login, $db_con->password, $db_con->db);
+$db_connection->set_charset("utf8");
 
 
 
@@ -59,13 +61,13 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="http://tasker/tasks.php">Задачи</a>
+                <a class="nav-link" href="http://<?=$domain?>/tasks.php">Задачи</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="http://tasker/tasks_of_employee.php">Задачи исполнителей</a>
+                <a class="nav-link" href="http://<?=$domain?>/tasks_of_employee.php">Задачи исполнителей</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://tasker/employee.php">Исполнители</a>
+                <a class="nav-link" href="http://<?=$domain?>/employee.php">Исполнители</a>
             </li>
         </ul>
     </div>
@@ -79,10 +81,10 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
     <ul class="nav nav-tabs">
         <?foreach ($empBase as $key=>$empData){
             $expl = explode(" ", $empData[0]);
-            if(count($expl) > 1)
+            if(count($expl) == 3)
                 $initials = $expl[0]." ".mb_substr($expl[1], 0, 1).".".mb_substr($expl[2], 0, 1).".";
             else
-                $initials = $expl[0];
+                $initials = $expl[0].(isset($expl[1])?(" ".$expl[1]):"");
         ?>
         <li class="nav-item">
             <a class="nav-link" data-toggle="tab" href="#employee-<?=$key?>"><?=$initials?></a>
@@ -114,7 +116,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
                         <tr class="<?=$statusBase[$task[3]]?>">
                             <td><?=$task[0]?></td>
                             <td><?=date("d.m.Y", strtotime($task[1]))?></td>
-                            <td><?=date("d.m.Y", strtotime($task[2]))?></td>
+                            <td><?=($task[2]===null?"":date("d.m.Y", strtotime($task[2])))?></td>
                             <td><?=$task[3]?></td>
                             <td class="result"><?=$task[4]?></td>
                         </tr>

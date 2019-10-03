@@ -2,7 +2,9 @@
 $f_config = "config.json";
 $configs = json_decode(file_get_contents($f_config));
 $db_con = $configs->db_config;
+$domain = $configs->domain_name;
 $db_connection = mysqli_connect($db_con->host, $db_con->login, $db_con->password, $db_con->db);
+$db_connection->set_charset("utf8");
 
 
 $query = "SELECT * FROM Employee ORDER BY Employee_ID";
@@ -40,13 +42,13 @@ while ($empRes = mysqli_fetch_assoc($employeeList))
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="http://tasker/tasks.php">Задачи</a>
+                <a class="nav-link" href="http://<?=$domain?>/tasks.php">Задачи</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://tasker/tasks_of_employee.php">Задачи исполнителей</a>
+                <a class="nav-link" href="http://<?=$domain?>/tasks_of_employee.php">Задачи исполнителей</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="http://tasker/employee.php">Исполнители</a>
+                <a class="nav-link" href="http://<?=$domain?>/employee.php">Исполнители</a>
             </li>
         </ul>
     </div>

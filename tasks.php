@@ -2,7 +2,9 @@
 $f_config = "config.json";
 $configs = json_decode(file_get_contents($f_config));
 $db_con = $configs->db_config;
+$domain = $configs->domain_name;
 $db_connection = mysqli_connect($db_con->host, $db_con->login, $db_con->password, $db_con->db);
+$db_connection->set_charset("utf8");
 
 
 
@@ -25,13 +27,14 @@ $employee = mysqli_query($db_connection, $query);
 $empBase = array();
 while ($empRes = mysqli_fetch_assoc($employee)) {
     $expl = explode(" ", $empRes["Fullname"]);
-    if(count($expl) > 1)
+    if(count($expl) == 3)
         $initials = $expl[0]." ".mb_substr($expl[1], 0, 1).".".mb_substr($expl[2], 0, 1).".";
     else
-        $initials = $expl[0];
+        $initials = $expl[0].(isset($expl[1])?(" ".$expl[1]):"");
     $empBase[$empRes["Task_ID"]][$empRes["Employee_ID"]] = $initials;
 }
-//var_dump($empBase);
+
+
 
 
 $query = "SELECT * FROM Employee ORDER BY Employee_ID";
@@ -39,10 +42,10 @@ $employee = mysqli_query($db_connection, $query);
 $empDict = array();
 while ($empRes = mysqli_fetch_assoc($employee)) {
     $expl = explode(" ", $empRes["Fullname"]);
-    if(count($expl) > 1)
+    if(count($expl) == 3)
         $initials = $expl[0]." ".mb_substr($expl[1], 0, 1).".".mb_substr($expl[2], 0, 1).".";
     else
-        $initials = $expl[0];
+        $initials = $expl[0].(isset($expl[1])?(" ".$expl[1]):"");
     $empDict[$empRes["Employee_ID"]] = $initials;
 }
 
@@ -54,16 +57,12 @@ $taskBase = array();
 while ($taskRes = mysqli_fetch_assoc($tasks))
     $taskBase[$taskRes["Task_ID"]] = array($taskRes["Description"], $taskRes["Start_Date"], $taskRes["End_Date"], $taskRes["Status_Name"], $taskRes["Result_Pointer"]);
 
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>Задачи исполнителей - Tasker</title>
+    <title>Задачи - Tasker</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
@@ -86,13 +85,13 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="http://tasker/tasks.php">Задачи</a>
+                <a class="nav-link" href="http://<?=$domain?>/tasks.php">Задачи</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://tasker/tasks_of_employee.php">Задачи исполнителей</a>
+                <a class="nav-link" href="http://<?=$domain?>/tasks_of_employee.php">Задачи исполнителей</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="http://tasker/employee.php">Исполнители</a>
+                <a class="nav-link" href="http://<?=$domain?>/employee.php">Исполнители</a>
             </li>
         </ul>
     </div>
@@ -125,7 +124,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
             <tr id="row-<?=$taskKey?>" class="<?=$statusBase[$task[3]]?>">
                 <td><?=$task[0]?></td>
                 <td><?=date("d.m.Y", strtotime($task[1]))?></td>
-                <td><?=date("d.m.Y", strtotime($task[2]))?></td>
+                <td><?=($task[2]===null?"":date("d.m.Y", strtotime($task[2])))?></td>
                 <td><?=$task[3]?></td>
                 <td class="result"><?=$task[4]?></td>
                 <td>

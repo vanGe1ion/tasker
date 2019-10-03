@@ -69,16 +69,23 @@ function SaveHandler(button, operation) {
 
     let query = "";
     if(operation === "create")
-        query = "INSERT INTO Task VALUES ("+Task_ID+", '"+Description+"', '"+StartDate+"', '"+EndDate+"', '"+Status+"', '"+ResultPointer+"')";//(EndDate===''?'null':("'"+EndDate+"'"))
+        query = "TaskCreate";
     else
-        query = "UPDATE Task SET Description='"+Description+"', Start_Date='"+StartDate+"', End_Date='"+EndDate+"', Status_ID='"+Status+"', Result_Pointer='"+ResultPointer+"' WHERE Task_ID=" + Task_ID;
+        query = "TaskEdit";
 
     $.ajax({
         url:"/script/php/ajaxer.php",
         type:"post",
-        dataType:"json",
         data:{
-            query:query
+            queryName:query,
+            data:{
+                Task_ID:Task_ID,
+                Description:Description,
+                Start_Date:StartDate,
+                End_Date:EndDate,
+                Status:Status,
+                Result_Pointer:ResultPointer
+            }
         },
         beforeSend:function () {
             row.children().children(":text, [type='date']").removeClass("is-invalid");
@@ -86,9 +93,9 @@ function SaveHandler(button, operation) {
                 row.children(":eq(0)").children(":text").addClass("is-invalid");
             if(StartDate === "")
                 row.children(":eq(1)").children("input").addClass("is-invalid");
-            if(EndDate === "")
-                row.children(":eq(2)").children("input").addClass("is-invalid");
-            if(Description === "" || StartDate === "" || EndDate === "")
+            // if(EndDate === "")
+            //     row.children(":eq(2)").children("input").addClass("is-invalid");
+            if(Description === "" || StartDate === "")// || EndDate === "")
                 return false;
             else
                 return true;
@@ -175,9 +182,11 @@ function DeleteHandler(button) {
     $.ajax({
         url:"/script/php/ajaxer.php",
         type:"post",
-        dataType:"json",
         data:{
-            query:"DELETE FROM Task WHERE Task_ID = " + Task_ID
+            queryName:"TaskRemove",
+            data:{
+                Task_ID:Task_ID
+            }
         },
         beforeSend:function () {
             return confirm("Вы действительно хотите удалить запись?");
@@ -205,7 +214,11 @@ function DropdownItemHandler(item) {
         type:"post",
         dataType:"json",
         data:{
-            query:"INSERT INTO RST_Employee_Task VALUES ("+empID+", "+taskID+")"
+            queryName:"RSTEmpTaskCreate",
+            data:{
+                Employee_ID:empID,
+                Task_ID:taskID
+            }
         },
         error:function () {
             alert("Ошибка выполнения AJAX-запроса!");
@@ -216,7 +229,6 @@ function DropdownItemHandler(item) {
             else{
                 $(item).addClass("disabled");
                 let btngp = $(item).parent().parent();
-                console.log(btngp);
                 btngp.before($("<div class='btn-group btn-group-sm mb-1' />")
                     .append($("<button class='btn btn-sm btn-primary empButton'>"+$(item).text()+"</button>"))
                     .append($("<button id='emp-"+empID+"' class='btn btn-sm btn-primary empOperation dismiss'>x</button>").click(function () {
@@ -239,7 +251,11 @@ function EmployerDismissHandler(button) {
         type:"post",
         dataType:"json",
         data:{
-            query:"DELETE FROM RST_Employee_Task WHERE Employee_ID = "+empID+" AND Task_ID = "+taskID
+            queryName:"RSTEmpTaskRemove",
+            data:{
+                Employee_ID: empID,
+                Task_ID:taskID
+            }
         },
         error:function () {
             alert("Ошибка выполнения AJAX-запроса!");
@@ -256,11 +272,15 @@ function EmployerDismissHandler(button) {
 }
 
 function ToNormalDate(date) {
-    let source = new Date(date);
-    let day = source.getDate();
-    let month = source.getMonth() + 1;
-    let year = source.getFullYear();
-    return (day<10?"0":"") + day + "." + (month<10?"0":"") + month + "." + year;
+    if (date === "")
+        return "";
+    else {
+        let source = new Date(date);
+        let day = source.getDate();
+        let month = source.getMonth() + 1;
+        let year = source.getFullYear();
+        return (day < 10 ? "0" : "") + day + "." + (month < 10 ? "0" : "") + month + "." + year;
+    }
 }
 
 function ToUnnormalDate(date) {

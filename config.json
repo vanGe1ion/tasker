@@ -6,7 +6,5 @@
     "db": "tasker"
   },
 
-  "default": {
-    "tasks": "all"
-  }
+  "domain_name": "tasker"
 }

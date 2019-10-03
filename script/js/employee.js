@@ -31,16 +31,20 @@ function SaveHandler(button, operation) {
 
     let query = "";
     if(operation === "create")
-        query = "INSERT INTO Employee VALUES ("+Employee_ID+", '"+Fullname+"', '"+Position+"')";
+        query = "EmployeeCreate";
     else
-        query = "UPDATE Employee SET Fullname='"+Fullname+"', Position='"+Position+"' WHERE Employee_ID=" + Employee_ID;
+        query = "EmployeeEdit";
 
     $.ajax({
         url:"/script/php/ajaxer.php",
         type:"post",
-        dataType:"json",
         data:{
-            query:query
+            queryName:query,
+            data:{
+                Employee_ID:Employee_ID,
+                Fullname:Fullname,
+                Position:Position
+            }
         },
         beforeSend:function () {
             row.children().children(":text").removeClass("is-invalid");
@@ -112,9 +116,11 @@ function DeleteHandler(button) {
     $.ajax({
         url:"/script/php/ajaxer.php",
         type:"post",
-        dataType:"json",
         data:{
-            query:"DELETE FROM Employee WHERE Employee_ID = " + Employee_ID
+            queryName:"EmployeeRemove",
+            data:{
+                Employee_ID:Employee_ID
+            }
         },
         beforeSend:function () {
             return confirm("Вы действительно хотите удалить запись?");

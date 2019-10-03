@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Окт 01 2019 г., 17:52
+-- Время создания: Окт 03 2019 г., 14:14
 -- Версия сервера: 5.7.20-log
 -- Версия PHP: 7.1.12
 
@@ -76,7 +76,7 @@ CREATE TABLE `Task` (
   `Task_ID` int(11) NOT NULL,
   `Description` text NOT NULL,
   `Start_Date` date NOT NULL,
-  `End_Date` date NOT NULL,
+  `End_Date` date DEFAULT NULL,
   `Status_ID` int(11) NOT NULL,
   `Result_Pointer` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -120,7 +120,7 @@ ALTER TABLE `Task`
 -- AUTO_INCREMENT для таблицы `Employee`
 --
 ALTER TABLE `Employee`
-  MODIFY `Employee_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `Employee_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT для таблицы `Status`
@@ -132,7 +132,7 @@ ALTER TABLE `Status`
 -- AUTO_INCREMENT для таблицы `Task`
 --
 ALTER TABLE `Task`
-  MODIFY `Task_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `Task_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Ограничения внешнего ключа сохраненных таблиц
