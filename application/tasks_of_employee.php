@@ -1,10 +1,14 @@
 <?php
-$f_config = "config.json";
+$f_config = "../private/config.json";
 $configs = json_decode(file_get_contents($f_config));
 $db_con = $configs->db_config;
 $domain = $configs->domain_name;
 $db_connection = mysqli_connect($db_con->host, $db_con->login, $db_con->password, $db_con->db);
 $db_connection->set_charset("utf8");
+
+session_start();
+$_SESSION["backTrace"] = "http://".$domain.$_SERVER["PHP_SELF"];
+$is_admin = $_SESSION["isAdmin"];
 
 
 
@@ -40,7 +44,9 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 <head>
     <meta charset="utf-8">
     <title>Задачи исполнителей - Tasker</title>
+    <link rel="shortcut icon" href="../image/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -61,15 +67,23 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
-                <a class="nav-link" href="http://<?=$domain?>/tasks.php">Задачи</a>
+                <a class="nav-link" href="http://<?=$domain?>/application/tasks.php">Задачи</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link" href="http://<?=$domain?>/tasks_of_employee.php">Задачи исполнителей</a>
+                <a class="nav-link" href="http://<?=$domain?>/application/tasks_of_employee.php">Задачи исполнителей</a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="http://<?=$domain?>/employee.php">Исполнители</a>
-            </li>
+            <?if($is_admin == true){?>
+                <li class="nav-item">
+                    <a class="nav-link" href="http://<?=$domain?>/application/employee.php">Исполнители</a>
+                </li>
+            <?}?>
         </ul>
+        <div>
+            <?if ($is_admin == true)
+                echo("<a class='btn btn-secondary verify' href='http://".$domain."/script/php/a_logout.php'>Выход</a>");
+            else
+                echo("<a class='btn btn-secondary verify' href='http://".$domain."/script/php/a_login.php'>Администратор</a>");?>
+        </div>
     </div>
 </nav>
 
