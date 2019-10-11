@@ -121,6 +121,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
         <thead class="thead-dark">
         <tr>
+            <th style="width: 1px">№</th>
             <th>Описание</th>
             <th>Дата назначения</th>
             <th>Дата завершения</th>
@@ -136,6 +137,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
         <tbody>
         <?foreach ($taskBase as $taskKey=>$task) {?>
             <tr id="row-<?=$taskKey?>" class="<?=$statusBase[$task[3]]?>">
+                <td><?=$taskKey?></td>
                 <td><?=$task[0]?></td>
                 <td><?=date("d.m.Y", strtotime($task[1]))?></td>
                 <td><?=($task[2]===null?"":date("d.m.Y", strtotime($task[2])))?></td>
@@ -156,7 +158,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
                             <button class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split empOperation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                             <div class="dropdown-menu dropdown-menu-right">
                                 <?foreach ($empDict as $key=>$employer){?>
-                                <a id="newemp-<?=$key?>" href="#" class="dropdown-item<?if(isset($empBase[$taskKey]))echo(in_array($employer, $empBase[$taskKey])? ' disabled':'')?>"><?=$employer?></a>
+                                <a id="newemp-<?=$key?>" href="#" class="dropdown-item<?if(isset($empBase[$taskKey]))echo(in_array($employer, $empBase[$taskKey])? ' d-none':'')?>"><?=$employer?></a>
                                 <?}?>
                             </div>
                         </div>
@@ -174,7 +176,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
         if($is_admin == true){?>
             <tr>
-                <td colspan="6"></td>
+                <td colspan="7"></td>
                 <td>
                     <button class="btn btn-secondary btn-sm add">Новая</button>
                 </td>

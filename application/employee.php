@@ -77,6 +77,7 @@ else{
 
             <thead class="thead-dark">
             <tr>
+                <th style="width: 1px">№</th>
                 <th>ФИО</th>
                 <th>Должность</th>
                 <th class="options">Опции</th>
@@ -86,6 +87,7 @@ else{
             <tbody>
             <?foreach ($empBase as $key=>$emp) {?>
                     <tr id="row-<?=$key?>">
+                        <td><?=$key?></td>
                         <td><?=$emp[0]?></td>
                         <td><?=$emp[1]?></td>
                         <td>
@@ -95,7 +97,7 @@ else{
                     </tr>
             <?}?>
                 <tr>
-                    <td colspan="2"></td>
+                    <td colspan="3"></td>
                     <td>
                         <button class="btn btn-secondary btn-sm add">Новый</button>
                     </td>

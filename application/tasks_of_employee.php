@@ -117,6 +117,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
             <table class="table table-hover">
                 <thead class="thead-dark">
                     <tr>
+                        <th style="width: 1px">№</th>
                         <th>Описание</th>
                         <th>Дата назначения</th>
                         <th>Дата завершения</th>
@@ -128,6 +129,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
                     <? if(isset($taskBase[$key]))
                     foreach ($taskBase[$key] as $taskKey=>$task) {?>
                         <tr class="<?=$statusBase[$task[3]]?>">
+                            <td><?=$taskKey?></td>
                             <td><?=$task[0]?></td>
                             <td><?=date("d.m.Y", strtotime($task[1]))?></td>
                             <td><?=($task[2]===null?"":date("d.m.Y", strtotime($task[2])))?></td>

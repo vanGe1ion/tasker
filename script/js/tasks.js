@@ -19,6 +19,7 @@ $(".add").click(function () {
     let lastRow = $(this).parent().parent().siblings(":last");
     let taskNum = lastRow.length? (Number(lastRow.attr("id").split("-")[1]) + 1): 1;
     $(this).parent().parent().before($("<tr id='row-"+ taskNum +"' />")
+        .append($("<td />").text(taskNum))
         .append($("<td />").append($("<input class='form-control form-control-sm' type='text'>")))
         .append($("<td />").append($("<input class='form-control form-control-sm' type='date'>")))
         .append($("<td />").append($("<input class='form-control form-control-sm' type='date'>")))
@@ -56,12 +57,12 @@ $(".add").click(function () {
 function SaveHandler(button, operation) {
     let row = $(button).parent().parent();
     let Task_ID = +(row.attr("id").split("-")[1]);
-    let Description = row.children(":eq(0)").children(":text").val();
-    let StartDate = row.children(":eq(1)").children("input").val();
-    let EndDate = row.children(":eq(2)").children("input").val();
-    let Status = +(row.children(":eq(3)").children("select").val());
-    let ResultPointer = row.children(":eq(4)").children(":text").val();
-    let Employees = row.children(":eq(5)").children().clone();
+    let Description = row.children(":eq(1)").children(":text").val();
+    let StartDate = row.children(":eq(2)").children("input").val();
+    let EndDate = row.children(":eq(3)").children("input").val();
+    let Status = +(row.children(":eq(4)").children("select").val());
+    let ResultPointer = row.children(":eq(5)").children(":text").val();
+    let Employees = row.children(":eq(6)").children().clone();
     Employees.children(".empAdd").children("div").children().click(function (e) {
         e.preventDefault();
         DropdownItemHandler(this);
@@ -90,11 +91,11 @@ function SaveHandler(button, operation) {
         beforeSend:function () {
             row.children().children(":text, [type='date']").removeClass("is-invalid");
             if(Description === "")
-                row.children(":eq(0)").children(":text").addClass("is-invalid");
+                row.children(":eq(1)").children(":text").addClass("is-invalid");
             if(StartDate === "")
-                row.children(":eq(1)").children("input").addClass("is-invalid");
+                row.children(":eq(2)").children("input").addClass("is-invalid");
             // if(EndDate === "")
-            //     row.children(":eq(2)").children("input").addClass("is-invalid");
+            //     row.children(":eq(3)").children("input").addClass("is-invalid");
             if(Description === "" || StartDate === "")// || EndDate === "")
                 return false;
             else
@@ -109,6 +110,7 @@ function SaveHandler(button, operation) {
             else{
                 Employees.children().children().removeClass("disabled");
                 row.addClass(StatusBase[StatusDict[Status]]).html("")
+                    .append($("<td />").text(Task_ID))
                     .append($("<td />").text(Description))
                     .append($("<td />").text(ToNormalDate(StartDate)))
                     .append($("<td />").text(ToNormalDate(EndDate)))
@@ -130,15 +132,17 @@ function SaveHandler(button, operation) {
 
 function EditHandler(button) {
     let row = $(button).parent().parent();
-    let Description = row.children(":eq(0)").text();
-    let StartDate = row.children(":eq(1)").text();
-    let EndDate = row.children(":eq(2)").text();
-    let Status = row.children(":eq(3)").text();
-    let ResultPointer = row.children(":eq(4)").text();
-    let Employees = row.children(":eq(5)").children().clone();
+    let Task_ID = +(row.attr("id").split("-")[1]);
+    let Description = row.children(":eq(1)").text();
+    let StartDate = row.children(":eq(2)").text();
+    let EndDate = row.children(":eq(3)").text();
+    let Status = row.children(":eq(4)").text();
+    let ResultPointer = row.children(":eq(5)").text();
+    let Employees = row.children(":eq(6)").children().clone();
     Employees.children().children().addClass("disabled");
 
     row.html("")
+        .append($("<td />").text(Task_ID))
         .append($("<td />").append($("<input class='form-control form-control-sm' type='text'>").val(Description)))
         .append($("<td />").append($("<input class='form-control form-control-sm' type='date'>").val(ToUnnormalDate(StartDate))))
         .append($("<td />").append($("<input class='form-control form-control-sm' type='date'>").val(ToUnnormalDate(EndDate))))
@@ -227,7 +231,7 @@ function DropdownItemHandler(item) {
             if(res === false)
                 alert("Ошибка выполнения SQL-запроса!");
             else{
-                $(item).addClass("disabled");
+                $(item).addClass("d-none");
                 let btngp = $(item).parent().parent();
                 btngp.before($("<div class='btn-group btn-group-sm mb-1' />")
                     .append($("<button class='btn btn-sm btn-primary empButton'>"+$(item).text()+"</button>"))
@@ -264,7 +268,7 @@ function EmployerDismissHandler(button) {
             if(res === false)
                 alert("Ошибка выполнения SQL-запроса!");
             else{
-                $(button).parent().siblings(":last").children("div").children(":contains("+fullname+")").removeClass("disabled");
+                $(button).parent().siblings(":last").children("div").children(":contains("+fullname+")").removeClass("d-none");
                 $(button).parent().remove();
             }
         }
