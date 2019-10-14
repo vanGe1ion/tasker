@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: localhost
--- Время создания: Окт 03 2019 г., 14:14
+-- Время создания: Окт 14 2019 г., 16:05
 -- Версия сервера: 5.7.20-log
 -- Версия PHP: 7.1.12
 
@@ -32,6 +32,19 @@ CREATE TABLE `Employee` (
   `Employee_ID` int(11) NOT NULL,
   `Fullname` varchar(70) NOT NULL,
   `Position` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `Planning`
+--
+
+CREATE TABLE `Planning` (
+  `Planning_ID` int(11) NOT NULL,
+  `Task_ID` int(11) NOT NULL,
+  `Date` date NOT NULL,
+  `Result` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -92,6 +105,13 @@ ALTER TABLE `Employee`
   ADD PRIMARY KEY (`Employee_ID`);
 
 --
+-- Индексы таблицы `Planning`
+--
+ALTER TABLE `Planning`
+  ADD PRIMARY KEY (`Planning_ID`),
+  ADD KEY `Task_ID` (`Task_ID`);
+
+--
 -- Индексы таблицы `RST_Employee_Task`
 --
 ALTER TABLE `RST_Employee_Task`
@@ -123,6 +143,12 @@ ALTER TABLE `Employee`
   MODIFY `Employee_ID` int(11) NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT для таблицы `Planning`
+--
+ALTER TABLE `Planning`
+  MODIFY `Planning_ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT для таблицы `Status`
 --
 ALTER TABLE `Status`
@@ -137,6 +163,12 @@ ALTER TABLE `Task`
 --
 -- Ограничения внешнего ключа сохраненных таблиц
 --
+
+--
+-- Ограничения внешнего ключа таблицы `Planning`
+--
+ALTER TABLE `Planning`
+  ADD CONSTRAINT `planning_ibfk_1` FOREIGN KEY (`Task_ID`) REFERENCES `Task` (`Task_ID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Ограничения внешнего ключа таблицы `RST_Employee_Task`

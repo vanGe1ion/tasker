@@ -24,27 +24,22 @@ $(".add").click(function () {
     );
 });
 
-function SaveHandler(button, operation) {
+function SaveHandler(button, type) {
     let row = $(button).parent().parent();
     let Employee_ID = +(row.attr("id").split("-")[1]);
     let Fullname = row.children(":eq(1)").children(":text").val();
     let Position = row.children(":eq(2)").children(":text").val();
 
-    let query = "";
-    if(operation === "create")
-        query = "EmployeeCreate";
-    else
-        query = "EmployeeEdit";
-
     $.ajax({
         url:"/script/php/ajaxer.php",
         type:"post",
         data:{
-            queryName:query,
-            data:{
+            querySet:"EmployeeQuerySet",
+            queryType:type,
+            queryData:{
                 Employee_ID:Employee_ID,
-                Fullname:Fullname,
-                Position:Position
+                Fullname:Fullname.escapeHTML(),
+                Position:Position.escapeHTML()
             }
         },
         beforeSend:function () {
@@ -62,7 +57,7 @@ function SaveHandler(button, operation) {
             alert("Ошибка выполнения AJAX-запроса!");
         },
         success:function (res) {
-            if(res === false)
+            if(res == false)
                 alert("Ошибка выполнения SQL-запроса!");
             else{
                 row.html("")
@@ -121,8 +116,9 @@ function DeleteHandler(button) {
         url:"/script/php/ajaxer.php",
         type:"post",
         data:{
-            queryName:"EmployeeRemove",
-            data:{
+            querySet:"EmployeeQuerySet",
+            queryType:"delete",
+            queryData:{
                 Employee_ID:Employee_ID
             }
         },
@@ -133,7 +129,7 @@ function DeleteHandler(button) {
             alert("Ошибка выполнения AJAX-запроса!");
         },
         success:function (res) {
-            if(res === false)
+            if(res == false)
                 alert("Ошибка выполнения SQL-запроса!");
             else
                 row.remove();

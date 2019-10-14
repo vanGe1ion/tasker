@@ -36,6 +36,7 @@ else{
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
         <link rel="stylesheet" type="text/css" href="/css/style.css">
+        <script defer type="text/javascript" src="/script/js/specSymbolReplacer.js"></script>
         <script defer type="text/javascript" src="/script/js/employee.js"></script>
     </head>
     <body>
@@ -49,6 +50,9 @@ else{
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="http://<?=$domain?>/application/planning.php">Журнал планерок</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" href="http://<?=$domain?>/application/tasks.php">Задачи</a>
                 </li>

@@ -67,6 +67,9 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
+                <a class="nav-link" href="http://<?=$domain?>/application/planning.php">Журнал планерок</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="http://<?=$domain?>/application/tasks.php">Задачи</a>
             </li>
             <li class="nav-item active">

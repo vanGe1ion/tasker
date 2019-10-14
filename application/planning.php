@@ -11,19 +11,6 @@ $_SESSION["backTrace"] = "http://".$domain.$_SERVER["PHP_SELF"];
 $is_admin = $_SESSION["isAdmin"];
 
 
-$query = "SELECT * FROM Status ORDER BY Status_ID";
-$statusList = mysqli_query($db_connection, $query);
-$stylearray = array("table-success", "table-primary", "table-warning", "table-danger");
-$iter = 0;
-$statusDict = array();
-$statusBase = array();
-while ($stRes = mysqli_fetch_assoc($statusList)) {
-    $statusDict[$stRes["Status_ID"]] = $stRes["Status_Name"];
-    $statusBase[$stRes["Status_Name"]] = $stylearray[$iter];
-    ++$iter;
-}
-
-
 $query = "SELECT Task_ID, Employee.Employee_ID, Fullname FROM RST_Employee_Task, Employee WHERE RST_Employee_Task.Employee_ID=Employee.Employee_ID ORDER BY Task_ID, Employee.Employee_ID";
 $employee = mysqli_query($db_connection, $query);
 $empBase = array();
@@ -38,25 +25,24 @@ while ($empRes = mysqli_fetch_assoc($employee)) {
 
 
 
-$query = "SELECT * FROM Employee ORDER BY Employee_ID";
-$employee = mysqli_query($db_connection, $query);
-$empDict = array();
-while ($empRes = mysqli_fetch_assoc($employee)) {
-    $expl = explode(" ", $empRes["Fullname"]);
-    if(count($expl) == 3)
-        $initials = $expl[0]." ".mb_substr($expl[1], 0, 1).".".mb_substr($expl[2], 0, 1).".";
-    else
-        $initials = $expl[0].(isset($expl[1])?(" ".$expl[1]):"");
-    $empDict[$empRes["Employee_ID"]] = $initials;
-}
-
-
-
-$query = "SELECT Task_ID, Description, Start_Date, End_Date, Status_Name, Result_Pointer FROM Task, Status WHERE Task.Status_ID=Status.Status_ID ORDER BY Task_ID";
+$query = "SELECT Task_ID, Description FROM Task ORDER BY Task_ID";
 $tasks = mysqli_query($db_connection, $query);
-$taskBase = array();
+$taskDict = array();
 while ($taskRes = mysqli_fetch_assoc($tasks))
-    $taskBase[$taskRes["Task_ID"]] = array($taskRes["Description"], $taskRes["Start_Date"], $taskRes["End_Date"], $taskRes["Status_Name"], $taskRes["Result_Pointer"]);
+    $taskDict[$taskRes["Task_ID"]] = $taskRes["Description"];
+
+
+
+$query = "SELECT Planning_ID, Planning.Task_ID, Description, Date, Result FROM Task, Planning WHERE Planning.Task_ID = Task.Task_ID ORDER BY Planning_ID";
+$planning = mysqli_query($db_connection, $query);
+$planningBase = array();
+while ($planningRes = mysqli_fetch_array($planning))
+    $planningBase[$planningRes["Planning_ID"]] = array(
+        "Task_ID" => $planningRes["Task_ID"],
+        "Description" => $planningRes["Description"],
+        "Date" => $planningRes["Date"],
+        "Result" => $planningRes["Result"]
+    );
 
 
 ?>
@@ -64,7 +50,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 <html lang="ru">
 <head>
     <meta charset="utf-8">
-    <title>Задачи - Tasker</title>
+    <title>Журнал планерок - Tasker</title>
     <link rel="shortcut icon" href="../image/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -76,7 +62,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <?if($is_admin==true){?>
-        <script defer type="text/javascript" src="/script/js/tasks.js"></script>
+        <script defer type="text/javascript" src="/script/js/planning.js"></script>
         <script defer type="text/javascript" src="/script/js/dateAdapter.js"></script>
         <script defer type="text/javascript" src="/script/js/specSymbolReplacer.js"></script>
     <?}?>
@@ -92,10 +78,10 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
     <div class="collapse navbar-collapse justify-content-around" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item">
+            <li class="nav-item active">
                 <a class="nav-link" href="http://<?=$domain?>/application/planning.php">Журнал планерок</a>
             </li>
-            <li class="nav-item active">
+            <li class="nav-item">
                 <a class="nav-link" href="http://<?=$domain?>/application/tasks.php">Задачи</a>
             </li>
             <li class="nav-item">
@@ -122,17 +108,15 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
 <div class="container" style="max-width: 80%">
 
-    <h1 class="text-center mt-5 mb-3">Задачи</h1>
+    <h1 class="text-center mt-5 mb-3">Журнал планерок</h1>
 
     <table class="table table-hover table-striped">
 
         <thead class="thead-dark">
         <tr>
             <th style="width: 1px">№</th>
-            <th>Описание</th>
-            <th>Дата назначения</th>
-            <th>Дата завершения</th>
-            <th>Статус</th>
+            <th>Задача</th>
+            <th>Дата</th>
             <th>Результат</th>
             <th>Исполнители</th>
             <?if($is_admin==true){?>
@@ -142,34 +126,21 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
         </thead>
 
         <tbody>
-        <?foreach ($taskBase as $taskKey=>$task) {?>
-            <tr id="row-<?=$taskKey?>" class="<?=$statusBase[$task[3]]?>">
-                <td><?=$taskKey?></td>
-                <td><?=$task[0]?></td>
-                <td><?=date("d.m.Y", strtotime($task[1]))?></td>
-                <td><?=($task[2]===null?"":date("d.m.Y", strtotime($task[2])))?></td>
-                <td><?=$task[3]?></td>
-                <td class="result"><?=$task[4]?></td>
-                <td class='employeeList'>
+        <?foreach ($planningBase as $planningKey => $plan) {?>
+            <tr id="row-<?=$planningKey?>">
+                <td><?=$planningKey?></td>
+                <td><?=$plan["Description"]?></td>
+                <td><?=date("d.m.Y", strtotime($plan["Date"]))?></td>
+                <td class="result"><?=$plan["Result"]?></td>
+                <td class="employeeList">
                     <div>
-                    <? if(isset($empBase[$taskKey]))
-                    foreach ($empBase[$taskKey] as $empId=>$empName) {?>
-                        <div class="btn-group btn-group-sm mb-1">
-                            <button class="btn btn-sm btn-primary empButton"><?=$empName?></button>
-                            <button id="emp-<?=$empId?>" class="btn btn-sm btn-primary empOperation dismiss<?=$is_admin==true?"":" disabled"?>">x</button>
-                        </div>
-                    <?}
-                    if($is_admin == true){?>
-                        <div class="btn-group btn-group-sm empAdd">
-                            <button class="btn btn-sm btn-success empButton">Назначить</button>
-                            <button class="btn btn-sm btn-success dropdown-toggle dropdown-toggle-split empOperation" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
-                            <div class="dropdown-menu dropdown-menu-right">
-                                <?foreach ($empDict as $key=>$employer){?>
-                                <a id="newemp-<?=$key?>" href="#" class="dropdown-item<?if(isset($empBase[$taskKey]))echo(in_array($employer, $empBase[$taskKey])? ' d-none':'')?>"><?=$employer?></a>
-                                <?}?>
-                            </div>
-                        </div>
-                    <?}?>
+                        <? if(isset($empBase[$plan["Task_ID"]]))
+                            foreach ($empBase[$plan["Task_ID"]] as $empId => $empName) {?>
+                                <div class="btn-group btn-group-sm mb-1">
+                                    <button class="btn btn-sm btn-primary empButton"><?=$empName?></button>
+                                    <button id="emp-<?=$empId?>" class="btn btn-sm btn-primary empOperation dismiss"></button>
+                                </div>
+                            <?}?>
                     </div>
                 </td>
                 <?if($is_admin == true){?>
@@ -183,7 +154,7 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
         if($is_admin == true){?>
             <tr>
-                <td colspan="7"></td>
+                <td colspan="5"></td>
                 <td>
                     <button class="btn btn-secondary btn-sm add">Новая</button>
                 </td>
@@ -195,12 +166,14 @@ while ($taskRes = mysqli_fetch_assoc($tasks))
 
 </div>
 
+
 <?if($is_admin == true){?>
     <script>
-        var StatusDict = <?=json_encode($statusDict)?>;
-        var StatusBase = <?=json_encode($statusBase)?>;
-        var EmpDict = <?=json_encode($empDict)?>;
+        var TaskDict = <?=json_encode($taskDict)?>;
+        var EmpBase = <?=json_encode($empBase)?>;
     </script>
 <?}?>
+
+
 </body>
 </html>

@@ -25,8 +25,8 @@ $(".add").click(function () {
         .append($("<td />").append($("<input class='form-control form-control-sm' type='date'>")))
         .append($("<td />").append($("<select class='form-control form-control-sm status' />")))
         .append($("<td class='result'/>").append($("<input class='form-control form-control-sm' type='text'>")))
-        .append($("<td />")
-            .append($("<div style='width: 180px'>")
+        .append($("<td class='employeeList' />")
+            .append($("<div />")
                 .append($("<div class='btn-group btn-group-sm empAdd' />")
                     .append($("<button class='btn btn-sm btn-success empButton disabled'>Назначить</button>"))
                     .append($("<button class='btn btn-sm btn-success dropdown-toggle dropdown-toggle-split empOperation disabled'  data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'></button>"))
@@ -54,7 +54,7 @@ $(".add").click(function () {
     });
 });
 
-function SaveHandler(button, operation) {
+function SaveHandler(button, type) {
     let row = $(button).parent().parent();
     let Task_ID = +(row.attr("id").split("-")[1]);
     let Description = row.children(":eq(1)").children(":text").val();
@@ -68,24 +68,19 @@ function SaveHandler(button, operation) {
         DropdownItemHandler(this);
     });
 
-    let query = "";
-    if(operation === "create")
-        query = "TaskCreate";
-    else
-        query = "TaskEdit";
-
     $.ajax({
         url:"/script/php/ajaxer.php",
         type:"post",
         data:{
-            queryName:query,
-            data:{
+            querySet:"TaskQuerySet",
+            queryType:type,
+            queryData:{
                 Task_ID:Task_ID,
-                Description:Description,
+                Description:Description.escapeHTML(),
                 Start_Date:StartDate,
                 End_Date:EndDate,
                 Status:Status,
-                Result_Pointer:ResultPointer
+                Result_Pointer:ResultPointer.escapeHTML()
             }
         },
         beforeSend:function () {
@@ -94,9 +89,7 @@ function SaveHandler(button, operation) {
                 row.children(":eq(1)").children(":text").addClass("is-invalid");
             if(StartDate === "")
                 row.children(":eq(2)").children("input").addClass("is-invalid");
-            // if(EndDate === "")
-            //     row.children(":eq(3)").children("input").addClass("is-invalid");
-            if(Description === "" || StartDate === "")// || EndDate === "")
+            if(Description === "" || StartDate === "")
                 return false;
             else
                 return true;
@@ -105,18 +98,18 @@ function SaveHandler(button, operation) {
             alert("Ошибка выполнения AJAX-запроса!");
         },
         success:function (res) {
-            if(res === false)
+            if(res == false)
                 alert("Ошибка выполнения SQL-запроса!");
             else{
                 Employees.children().children().removeClass("disabled");
-                row.addClass(StatusBase[StatusDict[Status]]).html("")
+                row.removeAttr("class").addClass(StatusBase[StatusDict[Status]]).html("")
                     .append($("<td />").text(Task_ID))
                     .append($("<td />").text(Description))
                     .append($("<td />").text(ToNormalDate(StartDate)))
                     .append($("<td />").text(ToNormalDate(EndDate)))
                     .append($("<td />").text(StatusDict[Status]))
                     .append($("<td class='result' />").text(ResultPointer))
-                    .append($("<td />").append(Employees))
+                    .append($("<td class='employeeList' />").append(Employees))
                     .append($("<td />")
                         .append($("<button class='btn btn-secondary btn-sm edit'>Редактировать</button>").css("marginRight", "5px").click(function () {
                             EditHandler(this);
@@ -148,7 +141,7 @@ function EditHandler(button) {
         .append($("<td />").append($("<input class='form-control form-control-sm' type='date'>").val(ToUnnormalDate(EndDate))))
         .append($("<td />").append($("<select class='status form-control form-control-sm' />")))
         .append($("<td class='result' />").append($("<input class='form-control form-control-sm' type='text'>").val(ResultPointer)))
-        .append($("<td />").append(Employees))
+        .append($("<td class='employeeList' />").append(Employees))
         .append($("<td />")
             .append($("<button class='btn btn-secondary btn-sm save'>Сохранить</button>").css("marginRight", "5px").click(function () {
                 SaveHandler(this, "update");
@@ -161,7 +154,7 @@ function EditHandler(button) {
                     .append($("<td />").text(EndDate))
                     .append($("<td />").text(Status))
                     .append($("<td class='result'/>").text(ResultPointer))
-                    .append($("<td />").append(Employees))
+                    .append($("<td class='employeeList' />").append(Employees))
                     .append($("<td />")
                         .append($("<button class='btn btn-secondary btn-sm edit'>Редактировать</button>").css("marginRight", "5px").click(function () {
                             EditHandler(this);
@@ -187,8 +180,9 @@ function DeleteHandler(button) {
         url:"/script/php/ajaxer.php",
         type:"post",
         data:{
-            queryName:"TaskRemove",
-            data:{
+            querySet:"TaskQuerySet",
+            queryType:"delete",
+            queryData:{
                 Task_ID:Task_ID
             }
         },
@@ -199,7 +193,7 @@ function DeleteHandler(button) {
             alert("Ошибка выполнения AJAX-запроса!");
         },
         success:function (res) {
-            if(res === false)
+            if(res == false)
                 alert("Ошибка выполнения SQL-запроса!");
             else
                 row.remove();
@@ -218,8 +212,9 @@ function DropdownItemHandler(item) {
         type:"post",
         dataType:"json",
         data:{
-            queryName:"RSTEmpTaskCreate",
-            data:{
+            querySet:"RSTEmployeeTaskQuerySet",
+            queryType:"create",
+            queryData:{
                 Employee_ID:empID,
                 Task_ID:taskID
             }
@@ -228,7 +223,7 @@ function DropdownItemHandler(item) {
             alert("Ошибка выполнения AJAX-запроса!");
         },
         success:function (res) {
-            if(res === false)
+            if(res == false)
                 alert("Ошибка выполнения SQL-запроса!");
             else{
                 $(item).addClass("d-none");
@@ -255,8 +250,9 @@ function EmployerDismissHandler(button) {
         type:"post",
         dataType:"json",
         data:{
-            queryName:"RSTEmpTaskRemove",
-            data:{
+            querySet:"RSTEmployeeTaskQuerySet",
+            queryType:"delete",
+            queryData:{
                 Employee_ID: empID,
                 Task_ID:taskID
             }
@@ -265,7 +261,7 @@ function EmployerDismissHandler(button) {
             alert("Ошибка выполнения AJAX-запроса!");
         },
         success:function (res) {
-            if(res === false)
+            if(res == false)
                 alert("Ошибка выполнения SQL-запроса!");
             else{
                 $(button).parent().siblings(":last").children("div").children(":contains("+fullname+")").removeClass("d-none");
@@ -273,25 +269,4 @@ function EmployerDismissHandler(button) {
             }
         }
     });
-}
-
-function ToNormalDate(date) {
-    if (date === "")
-        return "";
-    else {
-        let source = new Date(date);
-        let day = source.getDate();
-        let month = source.getMonth() + 1;
-        let year = source.getFullYear();
-        return (day < 10 ? "0" : "") + day + "." + (month < 10 ? "0" : "") + month + "." + year;
-    }
-}
-
-function ToUnnormalDate(date) {
-    let source = date.split(".");
-    let day = source[0];
-    let month = source[1];
-    let year = source[2];
-    return year + "-" + month + "-" + day;
-
 }
