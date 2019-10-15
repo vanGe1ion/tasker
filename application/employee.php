@@ -54,6 +54,9 @@ else{
                     <a class="nav-link" href="http://<?=$domain?>/application/planning.php">Журнал планерок</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="http://<?=$domain?>/application/calendar.php">Календарь планерок</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="http://<?=$domain?>/application/tasks.php">Задачи</a>
                 </li>
                 <li class="nav-item">
