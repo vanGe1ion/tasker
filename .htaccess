@@ -1,10 +1,11 @@
-ErrorDocument 404 /service/404.php
+ErrorDocument 404 /application/page/service/404.php
 ErrorDocument 401 /index.php
 
 #<IfModule mod_rewrite.c>
 #    # заглушка
-#    RewriteCond %{REQUEST_URI} !/service/offline.html$
+#    RewriteEngine On
+#    RewriteCond %{REQUEST_URI} !/application/page/service/offline.html$
 #    RewriteCond %{REMOTE_ADDR} !^10\.1\.92\.80
 #    RewriteCond %{REQUEST_FILENAME} !off.png
-#    RewriteRule $ /service/offline.html [R=302,L]
+#    RewriteRule $ /application/page/service/offline.html [R=302,L]
 #</IfModule>

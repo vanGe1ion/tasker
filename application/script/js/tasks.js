@@ -69,7 +69,7 @@ function SaveHandler(button, type) {
     });
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         data:{
             querySet:"TaskQuerySet",
@@ -177,7 +177,7 @@ function DeleteHandler(button) {
     let Task_ID = +(row.attr("id").split("-")[1]);
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         data:{
             querySet:"TaskQuerySet",
@@ -208,7 +208,7 @@ function DropdownItemHandler(item) {
     let empID = $(item).attr("id").split("-")[1];
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         dataType:"json",
         data:{
@@ -246,7 +246,7 @@ function EmployerDismissHandler(button) {
     let fullname =  $(button).siblings().text();
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         dataType:"json",
         data:{

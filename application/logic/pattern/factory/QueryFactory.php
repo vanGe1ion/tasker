@@ -1,6 +1,6 @@
 <?php
 
-require_once $_SERVER["DOCUMENT_ROOT"] ."/interface/IQuerySet.php";
+require_once $_SERVER["DOCUMENT_ROOT"] . "/application/logic/interface/IQuerySet.php";
 
 
 class QueryFactory
@@ -15,7 +15,7 @@ class QueryFactory
     }
 
     public function InitializeQuery($querySetClassName, $queryMethodName){
-        $classPath = $_SERVER["DOCUMENT_ROOT"] ."/class/QuerySet/".$querySetClassName.".php";
+        $classPath = $_SERVER["DOCUMENT_ROOT"] ."/application/logic/classes/QuerySet/".$querySetClassName.".php";
         if(file_exists($classPath)) {
             require_once $classPath;
             $this->querySetClass = $querySetClassName;

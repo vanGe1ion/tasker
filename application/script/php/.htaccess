@@ -1,6 +1,6 @@
 <Files "a_login.php">
 AuthType Basic
 AuthName "Please input login and password!"
-AuthUserFile  C:/OSPanel/domains/tasker/private/.htpasswd
+AuthUserFile  C:\OSPanel\domains\tasker\application\private\.htpasswd
 require valid-user
 </Files>

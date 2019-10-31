@@ -31,7 +31,7 @@ function SaveHandler(button, type) {
     let Position = row.children(":eq(2)").children(":text").val();
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         data:{
             querySet:"EmployeeQuerySet",
@@ -113,7 +113,7 @@ function DeleteHandler(button) {
     let row = $(button).parent().parent();
     let Employee_ID = +(row.attr("id").split("-")[1]);
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         data:{
             querySet:"EmployeeQuerySet",

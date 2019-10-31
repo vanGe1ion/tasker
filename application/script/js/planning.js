@@ -49,7 +49,7 @@ function SaveHandler(button, type) {
     let Employees = row.children(":eq(4)").children().clone();
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         data:{
             querySet:"PlanningQuerySet",
@@ -151,7 +151,7 @@ function DeleteHandler(button) {
     let Planning_ID = +(row.attr("id").split("-")[1]);
 
     $.ajax({
-        url:"/script/php/ajaxer.php",
+        url:"/application/script/php/ajaxer.php",
         type:"post",
         data:{
             querySet:"PlanningQuerySet",

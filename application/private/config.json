@@ -4,7 +4,5 @@
     "login": "root",
     "password": "",
     "db": "tasker"
-  },
-
-  "domain_name": "tasker"
+  }
 }
