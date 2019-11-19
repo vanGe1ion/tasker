@@ -10,9 +10,9 @@ extract($pageData);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
-
-<?$pagePreparer->CreateHead()?>
-
+<head>
+    <?$pagePreparer->CreateHead()?>
+</head>
 <body>
 
 
@@ -29,18 +29,18 @@ extract($pageData);
     <table class="table table-hover table-striped">
 
         <thead class="thead-dark">
-        <tr>
-            <th style="width: 1px">№</th>
-            <th>Описание</th>
-            <th>Дата назначения</th>
-            <th>Дата завершения</th>
-            <th>Статус</th>
-            <th>Результат</th>
-            <th>Исполнители</th>
-            <?if($isAdmin==true){?>
-                <th class='options'>Опции</th>
-            <?}?>
-        </tr>
+            <tr>
+                <th style="width: 1px">№</th>
+                <th>Описание</th>
+                <th>Дата назначения</th>
+                <th>Дата завершения</th>
+                <th>Статус</th>
+                <th>Результат</th>
+                <th>Исполнители</th>
+                <?if($isAdmin==true){?>
+                    <th class='options'>Опции</th>
+                <?}?>
+            </tr>
         </thead>
 
         <tbody>

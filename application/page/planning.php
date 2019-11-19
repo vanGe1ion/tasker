@@ -10,9 +10,9 @@ extract($pageData);
 ?>
 <!DOCTYPE html>
 <html lang="ru">
-
-<?$pagePreparer->CreateHead()?>
-
+<head>
+    <?$pagePreparer->CreateHead()?>
+</head>
 <body>
 
 

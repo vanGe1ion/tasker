@@ -58,4 +58,9 @@ class PageDataDirector
         $this->pageDataBuilder->BuildCalendarContent();
         return $this->ReturnPageData();
     }
+
+    public function GetSheetPageData(){
+        $this->ResetBuilder();
+        return $this->ReturnPageData();
+    }
 }

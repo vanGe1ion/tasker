@@ -8,10 +8,11 @@ class Navigator
     public function __construct()
     {
         $this->navs = array(
-            PageEnum::PLANNING,
-            PageEnum::CALENDAR,
+            PageEnum::SHEET,
             PageEnum::TASK,
             PageEnum::TASK_OF_EMPLOYEE,
+            PageEnum::PLANNING,
+            PageEnum::CALENDAR,
             PageEnum::EMPLOYEE
         );
     }

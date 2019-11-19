@@ -7,7 +7,9 @@ abstract class EmployeeQuerySet implements IQuerySet
         return "INSERT INTO Employee VALUES (".$data['Employee_ID'].", '".$data['Fullname']."', '".$data['Position']."')";
     }
 
-    public static function Read($data){}
+    public static function Read($data){
+        return "SELECT Employee_ID, Fullname, Position FROM Employee" . (isset($data['Employee_ID']) ? (" WHERE Employee_ID = " . $data['Employee_ID']) : "");
+    }
 
     public static function Update($data){
         return "UPDATE Employee SET Fullname='".$data['Fullname']."', Position='".$data['Position']."' WHERE Employee_ID=".$data['Employee_ID'];

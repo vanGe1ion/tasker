@@ -19,8 +19,23 @@ else {
     $queryFactory = new QueryFactory();
     $queryFactory->InitializeQuery($querySet, $queryType);
     $query = $queryFactory->GetQuery($queryData);
-
-
     $res = mysqli_query($db_connection, $query);
-    echo $res;
+
+    if(
+        $queryType == "create" ||
+        $queryType == "update" ||
+        $queryType == "delete" ||
+        $res == false
+    )
+        echo $res;
+    else{
+        $resultArray = array();
+        for ($i = 0; $fetcher = mysqli_fetch_assoc($res); ++$i){
+            $fieldArray = array();
+            foreach ($fetcher as $item => $value)
+                $fieldArray[$item] = $value;
+            $resultArray[$i] = $fieldArray;
+        }
+        echo json_encode($resultArray);
+    }
 }

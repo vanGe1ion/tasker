@@ -32,4 +32,9 @@ abstract class PageEnum
         "page" => "employee",
         "label" => "Исполнители"
     );
+
+    public const SHEET = array(
+        "page" => "sheet",
+        "label" => "Табель"
+    );
 }
